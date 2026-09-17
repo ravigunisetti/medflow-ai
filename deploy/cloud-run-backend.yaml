@@ -1,0 +1,57 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: phcnet-backend
+  labels:
+    cloud.googleapis.com/location: asia-south1
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/minScale: "1"
+        autoscaling.knative.dev/maxScale: "10"
+        run.googleapis.com/cpu-throttling: "false"
+        run.googleapis.com/cloudsql-instances: "${PROJECT_ID}:asia-south1:phcnet-db-primary"
+    spec:
+      containerConcurrency: 80
+      timeoutSeconds: 300
+      containers:
+        - image: asia-south1-docker.pkg.dev/${PROJECT_ID}/phcnet-repo/phcnet-backend:latest
+          ports:
+            - containerPort: 8080
+          resources:
+            limits:
+              cpu: "2000m"
+              memory: "2Gi"
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "prod"
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:postgresql:///${DB_NAME}?cloudSqlInstance=${PROJECT_ID}:asia-south1:phcnet-db-primary&socketFactory=com.google.cloud.sql.postgres.SocketFactory"
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: db-user
+                  key: latest
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-password
+                  key: latest
+            - name: PHCNET_SECURITY_JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: latest
+          startupProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            failureThreshold: 5
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+            periodSeconds: 15

@@ -1,0 +1,21 @@
+id,code,name,category,unit,safety_stock,shelf_life_days,requires_cold_chain,base_demand_rate,seasonality
+1,MED-001,Amoxicillin 500mg,Antibiotic,Capsule,1000,730,False,0.045,winter
+2,MED-002,Azithromycin 250mg,Antibiotic,Tablet,600,730,False,0.025,winter
+3,MED-003,Ciprofloxacin 500mg,Antibiotic,Tablet,800,730,False,0.035,monsoon
+4,MED-004,Doxycycline 100mg,Antibiotic,Capsule,500,730,False,0.02,monsoon
+5,MED-005,Paracetamol 500mg,Analgesic/Antipyretic,Tablet,3000,1095,False,0.18,monsoon
+6,MED-006,Ibuprofen 400mg,Analgesic/Antipyretic,Tablet,1200,730,False,0.05,none
+7,MED-007,Oral Rehydration Salts (ORS),Maternal & Child Health,Sachet,2000,730,False,0.12,monsoon
+8,MED-008,Zinc Sulfate 20mg,Maternal & Child Health,Tablet,1500,730,False,0.08,monsoon
+9,MED-009,Iron Folic Acid (IFA Large),Maternal & Child Health,Tablet,2500,730,False,0.11,none
+10,MED-010,Albendazole 400mg,Maternal & Child Health,Chewable Tablet,800,1095,False,0.03,none
+11,MED-011,Oxytocin 10 IU/ml,Maternal & Child Health,Ampoule,300,730,True,0.015,none
+12,MED-012,Metformin 500mg,Chronic Care,Tablet,2500,1095,False,0.13,none
+13,MED-013,Amlodipine 5mg,Chronic Care,Tablet,2000,1095,False,0.1,none
+14,MED-014,Atenolol 50mg,Chronic Care,Tablet,1500,730,False,0.07,none
+15,MED-015,Enalapril 5mg,Chronic Care,Tablet,1200,730,False,0.055,none
+16,MED-016,Anti-Snake Venom (ASV Polyvalent),Emergency & Critical,Vial,50,730,True,0.003,monsoon
+17,MED-017,Anti-Rabies Vaccine (ARV),Emergency & Critical,Vial,150,730,True,0.008,none
+18,MED-018,Dexamethasone 4mg/ml,Emergency & Critical,Ampoule,400,730,False,0.018,winter
+19,MED-019,Atropine Sulfate 0.6mg/ml,Emergency & Critical,Ampoule,200,730,False,0.006,none
+20,MED-020,Salbutamol Inhaler 100mcg,Emergency & Critical,Inhaler,350,730,False,0.016,winter

@@ -1,0 +1,6 @@
+id,username,password_hash,full_name,email,role,assigned_phc_id,assigned_district,is_active
+1,admin,$2a$10$7zB3cW0L1J4P8Y9X2T6O0e0mYw0Q4k9F1v3P5q7R9t1Z3b5V7x9A.,State Directorate Administrator,admin@phcnet.gov.in,ROLE_ADMIN,,,True
+2,dho_pune,$2a$10$7zB3cW0L1J4P8Y9X2T6O0e0mYw0Q4k9F1v3P5q7R9t1Z3b5V7x9A.,Dr. Rajesh Sharma (DHO Pune),dho.pune@phcnet.gov.in,ROLE_DISTRICT_OFFICER,,Pune,True
+3,dho_nashik,$2a$10$7zB3cW0L1J4P8Y9X2T6O0e0mYw0Q4k9F1v3P5q7R9t1Z3b5V7x9A.,Dr. Ananya Joshi (DHO Nashik),dho.nashik@phcnet.gov.in,ROLE_DISTRICT_OFFICER,,Nashik,True
+4,phc_mgr_1,$2a$10$7zB3cW0L1J4P8Y9X2T6O0e0mYw0Q4k9F1v3P5q7R9t1Z3b5V7x9A.,Sunita Devi (Pharmacist PHC-1),mgr.phc1@phcnet.gov.in,ROLE_PHC_MANAGER,1,Pune,True
+5,phc_mgr_16,$2a$10$7zB3cW0L1J4P8Y9X2T6O0e0mYw0Q4k9F1v3P5q7R9t1Z3b5V7x9A.,Kavita Patil (Pharmacist PHC-16 Surplus),mgr.phc16@phcnet.gov.in,ROLE_PHC_MANAGER,16,Nashik,True

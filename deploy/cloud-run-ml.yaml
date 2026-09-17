@@ -1,0 +1,44 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: phcnet-ml-service
+  labels:
+    cloud.googleapis.com/location: asia-south1
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/minScale: "1"
+        autoscaling.knative.dev/maxScale: "8"
+    spec:
+      containerConcurrency: 40
+      timeoutSeconds: 120
+      containers:
+        - image: asia-south1-docker.pkg.dev/${PROJECT_ID}/phcnet-repo/phcnet-ml-service:latest
+          ports:
+            - containerPort: 8000
+          resources:
+            limits:
+              cpu: "2000m"
+              memory: "2Gi"
+          env:
+            - name: BACKEND_URL
+              value: "https://phcnet-backend-hash-el.a.run.app"
+            - name: GEMINI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: gemini-api-key
+                  key: latest
+            - name: ENVIRONMENT
+              value: "production"
+          startupProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            periodSeconds: 15
