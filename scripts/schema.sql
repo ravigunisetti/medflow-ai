@@ -6,6 +6,10 @@
 
 -- Drop tables in reverse dependency order
 DROP TABLE IF EXISTS audit_logs CASCADE;
+DROP TABLE IF EXISTS blood_transfers CASCADE;
+DROP TABLE IF EXISTS emergency_blood_requests CASCADE;
+DROP TABLE IF EXISTS blood_inventories CASCADE;
+DROP TABLE IF EXISTS blood_banks CASCADE;
 DROP TABLE IF EXISTS transfers CASCADE;
 DROP TABLE IF EXISTS predictions CASCADE;
 DROP TABLE IF EXISTS patient_footfalls CASCADE;
@@ -171,3 +175,92 @@ CREATE TABLE audit_logs (
 );
 
 CREATE INDEX idx_audit_created ON audit_logs(created_at DESC);
+
+-- ==============================================================================
+-- EMERGENCY BLOOD NETWORK MODULE
+-- ==============================================================================
+
+-- ------------------------------------------------------------------------------
+-- 10. Certified Blood Banks & Resource Centers
+-- ------------------------------------------------------------------------------
+CREATE TABLE blood_banks (
+    id BIGSERIAL PRIMARY KEY,
+    name VARCHAR(150) NOT NULL,
+    district VARCHAR(100) NOT NULL,
+    state VARCHAR(100) NOT NULL DEFAULT 'Maharashtra',
+    latitude DOUBLE PRECISION NOT NULL,
+    longitude DOUBLE PRECISION NOT NULL,
+    verification_status VARCHAR(30) NOT NULL CHECK (verification_status IN ('VERIFIED', 'PROVISIONAL', 'PENDING_AUDIT')),
+    contact_phone VARCHAR(50) NOT NULL,
+    contact_email VARCHAR(100),
+    operating_hours VARCHAR(100) NOT NULL DEFAULT '24x7 Emergency',
+    storage_capacity_units INTEGER NOT NULL DEFAULT 1000 CHECK (storage_capacity_units > 0),
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_blood_banks_district ON blood_banks(district);
+CREATE INDEX idx_blood_banks_geo ON blood_banks(latitude, longitude);
+CREATE INDEX idx_blood_banks_status ON blood_banks(verification_status, is_active);
+
+-- ------------------------------------------------------------------------------
+-- 11. Blood Bank Real-Time Inventory Balances
+-- ------------------------------------------------------------------------------
+CREATE TABLE blood_inventories (
+    id BIGSERIAL PRIMARY KEY,
+    blood_bank_id BIGINT NOT NULL REFERENCES blood_banks(id) ON DELETE CASCADE,
+    blood_group VARCHAR(10) NOT NULL CHECK (blood_group IN ('A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-')),
+    component_type VARCHAR(30) NOT NULL DEFAULT 'WHOLE_BLOOD' CHECK (component_type IN ('WHOLE_BLOOD', 'PRBC', 'FFP', 'PLATELETS')),
+    units_available INTEGER NOT NULL CHECK (units_available >= 0),
+    reserved_units INTEGER NOT NULL DEFAULT 0 CHECK (reserved_units >= 0),
+    last_updated TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT uq_blood_bank_group_component UNIQUE (blood_bank_id, blood_group, component_type)
+);
+
+CREATE INDEX idx_blood_inv_bank_group ON blood_inventories(blood_bank_id, blood_group);
+CREATE INDEX idx_blood_inv_available ON blood_inventories(blood_group, units_available);
+
+-- ------------------------------------------------------------------------------
+-- 12. Urgent & Emergency Blood Requests
+-- ------------------------------------------------------------------------------
+CREATE TABLE emergency_blood_requests (
+    id BIGSERIAL PRIMARY KEY,
+    hospital_id BIGINT NOT NULL REFERENCES phcs(id) ON DELETE RESTRICT,
+    blood_group VARCHAR(10) NOT NULL CHECK (blood_group IN ('A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-')),
+    component_type VARCHAR(30) NOT NULL DEFAULT 'WHOLE_BLOOD',
+    units_required INTEGER NOT NULL CHECK (units_required > 0),
+    priority VARCHAR(20) NOT NULL CHECK (priority IN ('CRITICAL', 'HIGH', 'MEDIUM', 'LOW')),
+    required_by TIMESTAMP WITH TIME ZONE NOT NULL,
+    status VARCHAR(30) NOT NULL CHECK (status IN ('CREATED', 'MATCHING', 'MATCH_FOUND', 'CONFIRMED', 'IN_TRANSIT', 'FULFILLED', 'CANCELLED', 'EXPIRED')),
+    clinical_notes TEXT,
+    created_by_user_id BIGINT REFERENCES users(id) ON DELETE SET NULL,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_blood_req_status ON emergency_blood_requests(status, priority);
+CREATE INDEX idx_blood_req_hospital ON emergency_blood_requests(hospital_id, created_at DESC);
+CREATE INDEX idx_blood_req_deadline ON emergency_blood_requests(required_by);
+
+-- ------------------------------------------------------------------------------
+-- 13. Emergency Blood Transport & Delivery Tracking
+-- ------------------------------------------------------------------------------
+CREATE TABLE blood_transfers (
+    id BIGSERIAL PRIMARY KEY,
+    request_id BIGINT NOT NULL REFERENCES emergency_blood_requests(id) ON DELETE RESTRICT,
+    source_blood_bank_id BIGINT NOT NULL REFERENCES blood_banks(id) ON DELETE RESTRICT,
+    destination_hospital_id BIGINT NOT NULL REFERENCES phcs(id) ON DELETE RESTRICT,
+    units INTEGER NOT NULL CHECK (units > 0),
+    estimated_distance_km DOUBLE PRECISION NOT NULL,
+    estimated_eta_minutes INTEGER NOT NULL,
+    status VARCHAR(30) NOT NULL CHECK (status IN ('DISPATCH_PENDING', 'IN_TRANSIT', 'DELIVERED', 'CANCELLED')),
+    cold_chain_verified BOOLEAN NOT NULL DEFAULT TRUE,
+    dispatched_at TIMESTAMP WITH TIME ZONE,
+    delivered_at TIMESTAMP WITH TIME ZONE,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_blood_transfer_req ON blood_transfers(request_id);
+CREATE INDEX idx_blood_transfer_status ON blood_transfers(status);

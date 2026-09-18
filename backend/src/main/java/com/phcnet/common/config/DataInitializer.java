@@ -28,6 +28,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Configuration
@@ -44,7 +45,11 @@ public class DataInitializer {
             FootfallRepository footfallRepo,
             PredictionService predictionService,
             UserRepository userRepo,
-            PasswordEncoder passwordEncoder) {
+            PasswordEncoder passwordEncoder,
+            com.phcnet.blood.repository.BloodBankRepository bloodBankRepo,
+            com.phcnet.blood.repository.BloodInventoryRepository bloodInventoryRepo,
+            com.phcnet.blood.repository.EmergencyBloodRequestRepository bloodReqRepo,
+            com.phcnet.blood.repository.BloodTransferRepository bloodTransferRepo) {
         return args -> {
             // Seed users if empty
             if (userRepo.count() == 0) {
@@ -82,16 +87,22 @@ public class DataInitializer {
                 log.info("Seeded 3 RBAC accounts: admin, district_pune, phc_shirwal.");
             }
 
-            if (phcRepo.count() > 0) {
-                log.info("Database already contains {} PHCs. Skipping automatic data bootstrap.", phcRepo.count());
-                return;
-            }
-
-            log.info("Database is empty. Checking for synthetic data files in ../data ...");
             Path dataPath = Paths.get("..", "data").toAbsolutePath().normalize();
             if (!dataPath.toFile().exists()) {
                 dataPath = Paths.get("data").toAbsolutePath().normalize();
             }
+
+            // Seed Blood Network if empty
+            if (bloodBankRepo.count() == 0) {
+                initBloodNetwork(dataPath, bloodBankRepo, bloodInventoryRepo, phcRepo, bloodReqRepo, bloodTransferRepo);
+            }
+
+            if (phcRepo.count() > 0) {
+                log.info("Database already contains {} PHCs. Skipping automatic medicine data bootstrap.", phcRepo.count());
+                return;
+            }
+
+            log.info("Database is empty. Ingesting primary healthcare datasets from {} ...", dataPath);
 
             File phcsFile = new File(dataPath.toFile(), "phcs.csv");
             File medsFile = new File(dataPath.toFile(), "medicines.csv");
@@ -192,6 +203,10 @@ public class DataInitializer {
                 // Run baseline risk evaluation across facilities
                 log.info("Evaluating initial stock-out risk ratings...");
                 predictionService.evaluateAllFacilities();
+
+                // Seed initial active emergency blood requests now that PHCs are loaded
+                seedSampleBloodRequests(bloodReqRepo, bloodTransferRepo, phcRepo, bloodBankRepo);
+
                 log.info("Bootstrap complete. System is ready for live traffic!");
 
             } else {
@@ -210,5 +225,133 @@ public class DataInitializer {
                 log.info("Manual sample bootstrap complete.");
             }
         };
+    }
+
+    private void initBloodNetwork(
+            Path dataPath,
+            com.phcnet.blood.repository.BloodBankRepository bloodBankRepo,
+            com.phcnet.blood.repository.BloodInventoryRepository bloodInventoryRepo,
+            PhcRepository phcRepo,
+            com.phcnet.blood.repository.EmergencyBloodRequestRepository bloodReqRepo,
+            com.phcnet.blood.repository.BloodTransferRepository bloodTransferRepo) {
+        log.info("Initializing Emergency Blood Network datasets...");
+        File banksFile = new File(dataPath.toFile(), "blood_banks.csv");
+        File invFile = new File(dataPath.toFile(), "blood_inventories.csv");
+
+        Map<Long, com.phcnet.blood.model.BloodBank> bankMap = new HashMap<>();
+
+        if (banksFile.exists() && invFile.exists()) {
+            try (BufferedReader br = new BufferedReader(new FileReader(banksFile))) {
+                String line = br.readLine(); // skip header
+                while ((line = br.readLine()) != null) {
+                    String[] parts = line.split(",");
+                    if (parts.length >= 12) {
+                        Long id = Long.parseLong(parts[0]);
+                        String name = parts[1];
+                        String district = parts[2];
+                        String state = parts[3];
+                        Double lat = Double.parseDouble(parts[4]);
+                        Double lon = Double.parseDouble(parts[5]);
+                        com.phcnet.blood.model.VerificationStatus vStatus = com.phcnet.blood.model.VerificationStatus.valueOf(parts[6]);
+                        String phone = parts[7];
+                        String email = parts[8];
+                        String hours = parts[9];
+                        Integer cap = Integer.parseInt(parts[10]);
+                        Boolean active = Boolean.parseBoolean(parts[11]);
+
+                        com.phcnet.blood.model.BloodBank bb = new com.phcnet.blood.model.BloodBank(
+                                null, name, district, state, lat, lon, vStatus, phone, email, hours, cap, active
+                        );
+                        bankMap.put(id, bloodBankRepo.save(bb));
+                    }
+                }
+                log.info("Loaded {} Blood Banks into Emergency Blood Network.", bankMap.size());
+            } catch (Exception e) {
+                log.error("Failed to parse blood_banks.csv", e);
+            }
+
+            try (BufferedReader br = new BufferedReader(new FileReader(invFile))) {
+                String line = br.readLine(); // skip header
+                int invCount = 0;
+                while ((line = br.readLine()) != null) {
+                    String[] parts = line.split(",");
+                    if (parts.length >= 6) {
+                        Long bankId = Long.parseLong(parts[1]);
+                        String group = parts[2];
+                        String compType = parts[3];
+                        Integer avail = Integer.parseInt(parts[4]);
+                        Integer res = Integer.parseInt(parts[5]);
+
+                        com.phcnet.blood.model.BloodBank bb = bankMap.get(bankId);
+                        if (bb != null) {
+                            com.phcnet.blood.model.BloodInventory inv = new com.phcnet.blood.model.BloodInventory(
+                                    null, bb, group, compType, avail, res
+                            );
+                            bloodInventoryRepo.save(inv);
+                            invCount++;
+                        }
+                    }
+                }
+                log.info("Loaded {} Blood Inventory records into Emergency Blood Network.", invCount);
+            } catch (Exception e) {
+                log.error("Failed to parse blood_inventories.csv", e);
+            }
+        } else {
+            log.warn("Blood Network CSV files not found. Creating default regional sample blood bank.");
+            com.phcnet.blood.model.BloodBank bb = bloodBankRepo.save(new com.phcnet.blood.model.BloodBank(
+                    null, "Pune Central Red Cross Blood Bank", "Pune", "Maharashtra", 18.5204, 73.8567,
+                    com.phcnet.blood.model.VerificationStatus.VERIFIED, "+91 20 2612 0000",
+                    "pune.redcross@medflow.gov.in", "24x7 Emergency", 2000, true
+            ));
+            bankMap.put(1L, bb);
+            for (String grp : List.of("O+", "O-", "A+", "A-", "B+", "B-", "AB+", "AB-")) {
+                bloodInventoryRepo.save(new com.phcnet.blood.model.BloodInventory(null, bb, grp, "WHOLE_BLOOD", 50, 5));
+            }
+        }
+    }
+
+    private void seedSampleBloodRequests(
+            com.phcnet.blood.repository.EmergencyBloodRequestRepository bloodReqRepo,
+            com.phcnet.blood.repository.BloodTransferRepository bloodTransferRepo,
+            PhcRepository phcRepo,
+            com.phcnet.blood.repository.BloodBankRepository bloodBankRepo) {
+        if (bloodReqRepo.count() > 0) return;
+        Phc samplePhc = phcRepo.findAll().stream().findFirst().orElse(null);
+        com.phcnet.blood.model.BloodBank sourceBank = bloodBankRepo.findAll().stream().findFirst().orElse(null);
+        if (samplePhc != null && sourceBank != null) {
+            // 1. Critical postpartum emergency (MATCH_FOUND)
+            bloodReqRepo.save(new com.phcnet.blood.model.EmergencyBloodRequest(
+                    null, samplePhc, "O-", "WHOLE_BLOOD", 4,
+                    com.phcnet.blood.model.RequestPriority.CRITICAL,
+                    java.time.Instant.now().plus(java.time.Duration.ofMinutes(45)),
+                    com.phcnet.blood.model.RequestStatus.MATCH_FOUND,
+                    "Emergency Postpartum Hemorrhage - Immediate universal blood required", null
+            ));
+
+            // 2. High priority polytrauma (IN_TRANSIT) with an active transfer
+            com.phcnet.blood.model.EmergencyBloodRequest transitReq = bloodReqRepo.save(new com.phcnet.blood.model.EmergencyBloodRequest(
+                    null, samplePhc, "A+", "WHOLE_BLOOD", 3,
+                    com.phcnet.blood.model.RequestPriority.HIGH,
+                    java.time.Instant.now().plus(java.time.Duration.ofMinutes(90)),
+                    com.phcnet.blood.model.RequestStatus.IN_TRANSIT,
+                    "Polytrauma road accident - Siren cold-chain dispatch active", null
+            ));
+
+            com.phcnet.blood.model.BloodTransfer transfer = new com.phcnet.blood.model.BloodTransfer(
+                    null, transitReq, sourceBank, samplePhc, 3, 14.2, 31, "IN_TRANSIT", true
+            );
+            transfer.setDispatchedAt(java.time.Instant.now().minus(java.time.Duration.ofMinutes(12)));
+            bloodTransferRepo.save(transfer);
+
+            // 3. Historical fulfilled emergency
+            bloodReqRepo.save(new com.phcnet.blood.model.EmergencyBloodRequest(
+                    null, samplePhc, "B+", "WHOLE_BLOOD", 2,
+                    com.phcnet.blood.model.RequestPriority.MEDIUM,
+                    java.time.Instant.now().minus(java.time.Duration.ofHours(3)),
+                    com.phcnet.blood.model.RequestStatus.FULFILLED,
+                    "Emergency scheduled pediatric transfusion - Transfusion completed", null
+            ));
+            log.info("Seeded initial live emergency blood requests and active siren transfer.");
+        }
     }
 }

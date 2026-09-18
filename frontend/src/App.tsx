@@ -10,6 +10,7 @@ import { TransfersPage } from './pages/TransfersPage';
 import { AiAssistantPage } from './pages/AiAssistantPage';
 import { SimulationPage } from './pages/SimulationPage';
 import { SystemHealthPage } from './pages/SystemHealthPage';
+import { EmergencyBloodPage } from './pages/EmergencyBloodPage';
 import { apiService } from './services/api';
 
 export const App: React.FC = () => {
@@ -55,6 +56,7 @@ export const App: React.FC = () => {
               <Route path="/inventory" element={<InventoryPage />} />
               <Route path="/predictions" element={<PredictionsPage />} />
               <Route path="/transfers" element={<TransfersPage />} />
+              <Route path="/blood-network" element={<EmergencyBloodPage />} />
               <Route path="/ai-assistant" element={<AiAssistantPage />} />
               <Route path="/simulation" element={<SimulationPage />} />
               <Route path="/system-health" element={<SystemHealthPage />} />

@@ -124,3 +124,61 @@ def get_active_alerts():
     except Exception as e:
         return []
     return []
+
+# ==========================================
+# Emergency Blood Network Tools
+# ==========================================
+
+def get_emergency_blood_requests():
+    """Retrieves all active and historical emergency blood requisitions in the network."""
+    try:
+        with httpx.Client(timeout=4.0) as client:
+            res = client.get(f"{settings.backend_url}/api/blood/requests")
+            if res.status_code == 200:
+                return res.json().get("data", [])
+    except Exception as e:
+        return {"error": f"Backend communication error: {str(e)}"}
+    return []
+
+def get_blood_dashboard_summary():
+    """Retrieves real-time blood network summary including active blood banks and inventory by blood group."""
+    try:
+        with httpx.Client(timeout=4.0) as client:
+            res = client.get(f"{settings.backend_url}/api/blood/dashboard/summary")
+            if res.status_code == 200:
+                return res.json().get("data", {})
+    except Exception as e:
+        return {"error": f"Backend communication error: {str(e)}"}
+    return {}
+
+def find_compatible_blood_resources(request_id: int):
+    """Executes the deterministic matching engine for an emergency blood requisition."""
+    try:
+        with httpx.Client(timeout=4.0) as client:
+            res = client.get(f"{settings.backend_url}/api/blood/requests/{request_id}/matches")
+            if res.status_code == 200:
+                return res.json().get("data", {})
+    except Exception as e:
+        return {"error": f"Backend communication error: {str(e)}"}
+    return {}
+
+def simulate_blood_emergency(blood_group: str, units_required: int, deadline_minutes: int = 60, scenario_type: str = "MASS_CASUALTY_ACCIDENT"):
+    """Runs the emergency blood simulation sandbox to identify optimal sources and route ETAs."""
+    try:
+        with httpx.Client(timeout=4.0) as client:
+            res = client.post(
+                f"{settings.backend_url}/api/blood/simulate",
+                json={
+                    "bloodGroup": blood_group,
+                    "unitsRequired": units_required,
+                    "deadlineMinutes": deadline_minutes,
+                    "scenarioType": scenario_type,
+                    "priority": "CRITICAL"
+                }
+            )
+            if res.status_code == 200:
+                return res.json().get("data", {})
+    except Exception as e:
+        return {"error": f"Backend communication error: {str(e)}"}
+    return {}
+

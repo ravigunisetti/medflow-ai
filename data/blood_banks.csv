@@ -1,0 +1,51 @@
+id,name,district,state,latitude,longitude,verification_status,contact_phone,contact_email,operating_hours,storage_capacity_units,is_active
+1,Red Cross Regional Blood Centre - Pune #1,Pune,Maharashtra,18.645884,73.42921,VERIFIED,+91 79012 42098,bloodbank.pune1@medflow.gov.in,24x7 Emergency,750,True
+2,Jeevan Jyoti Blood Bank - Pune #2,Pune,Maharashtra,18.600739,74.135187,VERIFIED,+91 70212 30926,bloodbank.pune2@medflow.gov.in,24x7 Emergency,1200,True
+3,Sanjivani Rotary Blood Bank - Pune #3,Pune,Maharashtra,18.816864,73.963368,VERIFIED,+91 98236 57400,bloodbank.pune3@medflow.gov.in,24x7 Emergency,1500,True
+4,Civil Hospital Blood Centre - Pune #4,Pune,Maharashtra,18.702038,74.021893,VERIFIED,+91 72339 89840,bloodbank.pune4@medflow.gov.in,24x7 Emergency,750,True
+5,Samarth Blood Bank & Component Lab - Pune #5,Pune,Maharashtra,18.892223,73.917162,VERIFIED,+91 93524 51245,bloodbank.pune5@medflow.gov.in,24x7 Emergency,750,True
+6,Sahyadri Charitable Blood Centre - Pune #6,Pune,Maharashtra,18.750604,74.181693,VERIFIED,+91 75008 92240,bloodbank.pune6@medflow.gov.in,24x7 Emergency,750,True
+7,Apex Lifeline Blood Centre - Pune #7,Pune,Maharashtra,18.212742,73.409621,VERIFIED,+91 93661 44522,bloodbank.pune7@medflow.gov.in,24x7 Emergency,1500,True
+8,National Model Blood Bank - Pune #8,Pune,Maharashtra,18.86125,74.155199,VERIFIED,+91 80076 41385,bloodbank.pune8@medflow.gov.in,24x7 Emergency,500,True
+9,District Health Mission Blood Centre - Pune #9,Pune,Maharashtra,18.906422,74.086439,PROVISIONAL,+91 92605 36365,bloodbank.pune9@medflow.gov.in,24x7 Emergency,1000,True
+10,Ayurseva Voluntary Blood Bank - Pune #10,Pune,Maharashtra,18.844072,73.470472,PENDING_AUDIT,+91 77798 46500,bloodbank.pune10@medflow.gov.in,24x7 Emergency,1200,True
+11,Red Cross Regional Blood Centre - Satara #1,Satara,Maharashtra,17.819192,74.387032,VERIFIED,+91 73224 17944,bloodbank.satara1@medflow.gov.in,24x7 Emergency,1200,True
+12,Jeevan Jyoti Blood Bank - Satara #2,Satara,Maharashtra,18.021594,74.278657,VERIFIED,+91 75449 63269,bloodbank.satara2@medflow.gov.in,24x7 Emergency,1200,True
+13,Sanjivani Rotary Blood Bank - Satara #3,Satara,Maharashtra,17.743844,74.033456,VERIFIED,+91 94509 51104,bloodbank.satara3@medflow.gov.in,24x7 Emergency,500,True
+14,Civil Hospital Blood Centre - Satara #4,Satara,Maharashtra,17.312293,73.665287,VERIFIED,+91 91540 86503,bloodbank.satara4@medflow.gov.in,24x7 Emergency,1500,True
+15,Samarth Blood Bank & Component Lab - Satara #5,Satara,Maharashtra,18.027108,74.304391,VERIFIED,+91 98811 42018,bloodbank.satara5@medflow.gov.in,24x7 Emergency,1000,True
+16,Sahyadri Charitable Blood Centre - Satara #6,Satara,Maharashtra,17.498379,74.083564,VERIFIED,+91 93514 54942,bloodbank.satara6@medflow.gov.in,24x7 Emergency,750,True
+17,Apex Lifeline Blood Centre - Satara #7,Satara,Maharashtra,17.721844,73.94185,VERIFIED,+91 70316 24663,bloodbank.satara7@medflow.gov.in,24x7 Emergency,500,True
+18,National Model Blood Bank - Satara #8,Satara,Maharashtra,17.987808,73.924802,VERIFIED,+91 90337 30257,bloodbank.satara8@medflow.gov.in,24x7 Emergency,750,True
+19,District Health Mission Blood Centre - Satara #9,Satara,Maharashtra,17.440158,74.334462,PROVISIONAL,+91 81457 50001,bloodbank.satara9@medflow.gov.in,24x7 Emergency,750,True
+20,Ayurseva Voluntary Blood Bank - Satara #10,Satara,Maharashtra,17.311106,74.076957,PENDING_AUDIT,+91 81327 51114,bloodbank.satara10@medflow.gov.in,24x7 Emergency,1200,True
+21,Red Cross Regional Blood Centre - Ahmednagar #1,Ahmednagar,Maharashtra,19.101183,74.88979,VERIFIED,+91 80688 62743,bloodbank.ahmednagar1@medflow.gov.in,24x7 Emergency,1000,True
+22,Jeevan Jyoti Blood Bank - Ahmednagar #2,Ahmednagar,Maharashtra,19.06579,74.701014,VERIFIED,+91 77002 77000,bloodbank.ahmednagar2@medflow.gov.in,24x7 Emergency,1200,True
+23,Sanjivani Rotary Blood Bank - Ahmednagar #3,Ahmednagar,Maharashtra,19.38898,74.390776,VERIFIED,+91 83580 92544,bloodbank.ahmednagar3@medflow.gov.in,24x7 Emergency,1500,True
+24,Civil Hospital Blood Centre - Ahmednagar #4,Ahmednagar,Maharashtra,19.058628,75.00279,VERIFIED,+91 91875 79616,bloodbank.ahmednagar4@medflow.gov.in,24x7 Emergency,1500,True
+25,Samarth Blood Bank & Component Lab - Ahmednagar #5,Ahmednagar,Maharashtra,19.082261,74.530567,VERIFIED,+91 84413 20155,bloodbank.ahmednagar5@medflow.gov.in,24x7 Emergency,1000,True
+26,Sahyadri Charitable Blood Centre - Ahmednagar #6,Ahmednagar,Maharashtra,19.374829,74.656761,VERIFIED,+91 95224 86556,bloodbank.ahmednagar6@medflow.gov.in,24x7 Emergency,500,True
+27,Apex Lifeline Blood Centre - Ahmednagar #7,Ahmednagar,Maharashtra,19.00184,74.891454,VERIFIED,+91 96153 62994,bloodbank.ahmednagar7@medflow.gov.in,24x7 Emergency,750,True
+28,National Model Blood Bank - Ahmednagar #8,Ahmednagar,Maharashtra,19.057147,74.6131,VERIFIED,+91 98824 59692,bloodbank.ahmednagar8@medflow.gov.in,24x7 Emergency,1000,True
+29,District Health Mission Blood Centre - Ahmednagar #9,Ahmednagar,Maharashtra,19.197122,74.529978,PROVISIONAL,+91 85517 97747,bloodbank.ahmednagar9@medflow.gov.in,24x7 Emergency,500,True
+30,Ayurseva Voluntary Blood Bank - Ahmednagar #10,Ahmednagar,Maharashtra,19.00839,74.930212,PENDING_AUDIT,+91 72490 87607,bloodbank.ahmednagar10@medflow.gov.in,24x7 Emergency,750,True
+31,Red Cross Regional Blood Centre - Solapur #1,Solapur,Maharashtra,17.609378,75.801663,VERIFIED,+91 99215 70258,bloodbank.solapur1@medflow.gov.in,24x7 Emergency,750,True
+32,Jeevan Jyoti Blood Bank - Solapur #2,Solapur,Maharashtra,17.465236,75.879578,VERIFIED,+91 89999 97580,bloodbank.solapur2@medflow.gov.in,24x7 Emergency,1200,True
+33,Sanjivani Rotary Blood Bank - Solapur #3,Solapur,Maharashtra,17.463331,75.835285,VERIFIED,+91 88192 41499,bloodbank.solapur3@medflow.gov.in,24x7 Emergency,1200,True
+34,Civil Hospital Blood Centre - Solapur #4,Solapur,Maharashtra,17.485796,75.717467,VERIFIED,+91 73953 35242,bloodbank.solapur4@medflow.gov.in,24x7 Emergency,1000,True
+35,Samarth Blood Bank & Component Lab - Solapur #5,Solapur,Maharashtra,17.509623,76.064494,VERIFIED,+91 74147 45954,bloodbank.solapur5@medflow.gov.in,24x7 Emergency,500,True
+36,Sahyadri Charitable Blood Centre - Solapur #6,Solapur,Maharashtra,17.366606,75.576061,VERIFIED,+91 86113 19710,bloodbank.solapur6@medflow.gov.in,24x7 Emergency,1500,True
+37,Apex Lifeline Blood Centre - Solapur #7,Solapur,Maharashtra,17.505888,75.973679,VERIFIED,+91 84051 50026,bloodbank.solapur7@medflow.gov.in,24x7 Emergency,1500,True
+38,National Model Blood Bank - Solapur #8,Solapur,Maharashtra,17.637033,75.551206,VERIFIED,+91 79440 47056,bloodbank.solapur8@medflow.gov.in,24x7 Emergency,1200,True
+39,District Health Mission Blood Centre - Solapur #9,Solapur,Maharashtra,17.849108,75.958997,PROVISIONAL,+91 79457 67560,bloodbank.solapur9@medflow.gov.in,24x7 Emergency,500,True
+40,Ayurseva Voluntary Blood Bank - Solapur #10,Solapur,Maharashtra,18.039575,76.037334,PENDING_AUDIT,+91 78831 85529,bloodbank.solapur10@medflow.gov.in,24x7 Emergency,500,True
+41,Red Cross Regional Blood Centre - Nashik #1,Nashik,Maharashtra,20.283686,73.653643,VERIFIED,+91 92730 74942,bloodbank.nashik1@medflow.gov.in,24x7 Emergency,1000,True
+42,Jeevan Jyoti Blood Bank - Nashik #2,Nashik,Maharashtra,19.747566,73.679223,VERIFIED,+91 94787 75338,bloodbank.nashik2@medflow.gov.in,24x7 Emergency,1200,True
+43,Sanjivani Rotary Blood Bank - Nashik #3,Nashik,Maharashtra,19.777261,74.062925,VERIFIED,+91 73717 70482,bloodbank.nashik3@medflow.gov.in,24x7 Emergency,500,True
+44,Civil Hospital Blood Centre - Nashik #4,Nashik,Maharashtra,20.288722,73.610798,VERIFIED,+91 95886 64387,bloodbank.nashik4@medflow.gov.in,24x7 Emergency,1000,True
+45,Samarth Blood Bank & Component Lab - Nashik #5,Nashik,Maharashtra,19.899268,74.136082,VERIFIED,+91 98495 34727,bloodbank.nashik5@medflow.gov.in,24x7 Emergency,750,True
+46,Sahyadri Charitable Blood Centre - Nashik #6,Nashik,Maharashtra,20.296852,73.742045,VERIFIED,+91 87234 69890,bloodbank.nashik6@medflow.gov.in,24x7 Emergency,500,True
+47,Apex Lifeline Blood Centre - Nashik #7,Nashik,Maharashtra,20.091468,73.577616,VERIFIED,+91 92426 47667,bloodbank.nashik7@medflow.gov.in,24x7 Emergency,750,True
+48,National Model Blood Bank - Nashik #8,Nashik,Maharashtra,20.14294,73.533846,VERIFIED,+91 75736 20350,bloodbank.nashik8@medflow.gov.in,24x7 Emergency,1500,True
+49,District Health Mission Blood Centre - Nashik #9,Nashik,Maharashtra,20.353689,74.179921,PROVISIONAL,+91 79802 93746,bloodbank.nashik9@medflow.gov.in,24x7 Emergency,1200,True
+50,Ayurseva Voluntary Blood Bank - Nashik #10,Nashik,Maharashtra,20.289554,74.012449,PENDING_AUDIT,+91 71607 89482,bloodbank.nashik10@medflow.gov.in,24x7 Emergency,1200,True

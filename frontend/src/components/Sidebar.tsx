@@ -9,6 +9,7 @@ import {
   Bot,
   Flame,
   ActivitySquare,
+  Droplet,
 } from 'lucide-react';
 
 export const Sidebar: React.FC = () => {
@@ -18,6 +19,7 @@ export const Sidebar: React.FC = () => {
     { to: '/inventory', label: 'Inventory Ledger', icon: Package },
     { to: '/predictions', label: 'Predictions & Alerts', icon: AlertOctagon },
     { to: '/transfers', label: 'Stock Transfers', icon: ArrowLeftRight },
+    { to: '/blood-network', label: 'Emergency Blood', icon: Droplet, badge: 'URGENT' },
     { to: '/ai-assistant', label: 'Gemini AI Agent', icon: Bot, badge: 'AI' },
     { to: '/simulation', label: 'Emergency Simulation', icon: Flame, badge: 'DEMO' },
     { to: '/system-health', label: 'System Health', icon: ActivitySquare },
@@ -53,6 +55,8 @@ export const Sidebar: React.FC = () => {
                     className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${
                       item.badge === 'AI'
                         ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30'
+                        : item.badge === 'URGENT'
+                        ? 'bg-red-500/25 text-red-300 border border-red-500/40 animate-pulse'
                         : 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
                     }`}
                   >

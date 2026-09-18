@@ -89,12 +89,12 @@ export const Navbar: React.FC<NavbarProps> = ({ healthScore = 96.4, onRefresh, i
           </div>
           <div>
             <div className="flex items-center space-x-2">
-              <span className="font-bold tracking-tight text-white text-lg">PHC-NET AI</span>
-              <span className="text-[10px] uppercase font-semibold tracking-wider px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20">
-                PROTOTYPE
+              <span className="font-bold tracking-tight text-white text-lg">MEDFLOW AI</span>
+              <span className="text-[10px] uppercase font-semibold tracking-wider px-2 py-0.5 rounded bg-cyan-500/15 text-cyan-400 border border-cyan-500/30">
+                ENTERPRISE
               </span>
             </div>
-            <p className="text-xs text-gray-400">National Health Mission • Primary Supply-Chain Command</p>
+            <p className="text-xs text-gray-400">AI Healthcare Resource Orchestration • India Public Health Grid</p>
           </div>
         </div>
       </div>

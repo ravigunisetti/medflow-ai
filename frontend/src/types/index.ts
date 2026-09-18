@@ -193,3 +193,159 @@ export interface SimulationRequest {
   supplyDelayDays?: number;
   affectedCategory?: string;
 }
+
+// ==========================================
+// Emergency Blood Network Types
+// ==========================================
+
+export type BloodGroup = 'A+' | 'A-' | 'B+' | 'B-' | 'AB+' | 'AB-' | 'O+' | 'O-';
+export type BloodRequestPriority = 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW';
+export type BloodRequestStatus =
+  | 'CREATED'
+  | 'MATCHING'
+  | 'MATCH_FOUND'
+  | 'CONFIRMED'
+  | 'IN_TRANSIT'
+  | 'FULFILLED'
+  | 'CANCELLED'
+  | 'EXPIRED';
+
+export interface BloodBank {
+  id: number;
+  name: string;
+  district: string;
+  state: string;
+  latitude: number;
+  longitude: number;
+  verificationStatus: 'VERIFIED' | 'PROVISIONAL' | 'PENDING_AUDIT';
+  contactPhone: string;
+  contactEmail?: string;
+  operatingHours: string;
+  storageCapacityUnits: number;
+  isActive: boolean;
+  createdAt?: string;
+}
+
+export interface BloodInventoryItem {
+  id: number;
+  bloodBankId: number;
+  bloodBankName: string;
+  bloodGroup: string;
+  componentType: string;
+  unitsAvailable: number;
+  reservedUnits: number;
+  unreservedUnits: number;
+  lastUpdated: string;
+}
+
+export interface EmergencyBloodRequest {
+  id: number;
+  hospitalId: number;
+  hospitalName: string;
+  hospitalDistrict: string;
+  hospitalLatitude: number;
+  hospitalLongitude: number;
+  bloodGroup: string;
+  componentType: string;
+  unitsRequired: number;
+  priority: BloodRequestPriority;
+  requiredBy: string;
+  status: BloodRequestStatus;
+  clinicalNotes?: string;
+  createdByName?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateBloodRequestInput {
+  hospitalId: number;
+  bloodGroup: string;
+  componentType?: string;
+  unitsRequired: number;
+  priority: BloodRequestPriority;
+  requiredBy: string;
+  clinicalNotes?: string;
+}
+
+export interface CandidateBloodResource {
+  bloodBankId: number;
+  bloodBankName: string;
+  district: string;
+  latitude: number;
+  longitude: number;
+  verificationStatus: string;
+  contactPhone: string;
+  bloodGroup: string;
+  componentType: string;
+  unitsAvailable: number;
+  unreservedUnits: number;
+  distanceKm: number;
+  etaMinutes: number;
+  estimatedArrival: string;
+  meetsDeadline: boolean;
+  matchScore: number;
+  isExactMatch: boolean;
+  matchReason: string;
+}
+
+export interface BloodMatchingResult {
+  request: EmergencyBloodRequest;
+  compatibleGroups: string[];
+  candidates: CandidateBloodResource[];
+  recommendedSource: CandidateBloodResource | null;
+  aiExplanation: string;
+  safetyDisclaimer: string;
+}
+
+export interface ConfirmBloodTransferInput {
+  requestId: number;
+  sourceBloodBankId: number;
+  units: number;
+  estimatedDistanceKm?: number;
+  estimatedEtaMinutes?: number;
+}
+
+export interface BloodTransfer {
+  id: number;
+  requestId: number;
+  bloodGroup: string;
+  units: number;
+  sourceBloodBankId: number;
+  sourceBloodBankName: string;
+  sourceDistrict: string;
+  destinationHospitalId: number;
+  destinationHospitalName: string;
+  destinationDistrict: string;
+  estimatedDistanceKm: number;
+  estimatedEtaMinutes: number;
+  status: string;
+  coldChainVerified: boolean;
+  dispatchedAt?: string;
+  deliveredAt?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface BloodDashboardSummary {
+  totalBloodBanks: number;
+  activeBloodBanks: number;
+  verifiedBloodBanks: number;
+  totalUnitsAvailable: number;
+  totalUnitsReserved: number;
+  totalEmergencyRequests: number;
+  activeEmergencies: number;
+  fulfilledEmergencies: number;
+  activeTransfers: number;
+  unitsByBloodGroup: Record<string, number>;
+  requestsByStatus: Record<string, number>;
+}
+
+export interface BloodSimulationInput {
+  hospitalId?: number;
+  bloodGroup: string;
+  unitsRequired: number;
+  priority: BloodRequestPriority;
+  deadlineMinutes: number;
+  scenarioType?: string;
+}
+

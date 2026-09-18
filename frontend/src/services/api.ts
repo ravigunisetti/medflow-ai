@@ -11,6 +11,16 @@ import {
   Transfer,
   DemandRecord,
   FootfallRecord,
+  BloodBank,
+  BloodInventoryItem,
+  EmergencyBloodRequest,
+  CreateBloodRequestInput,
+  CandidateBloodResource,
+  BloodMatchingResult,
+  ConfirmBloodTransferInput,
+  BloodTransfer,
+  BloodDashboardSummary,
+  BloodSimulationInput,
 } from '../types';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
@@ -173,6 +183,75 @@ export const apiService = {
 
   runSimulation: async (req: import('../types').SimulationRequest) => {
     const res = await apiClient.post<ApiResponse<import('../types').SimulationResult>>('/simulation/run', req);
+    return res.data.data;
+  },
+
+  // Emergency Blood Network
+  getBloodBanks: async (district?: string): Promise<BloodBank[]> => {
+    const params = district ? { district } : {};
+    const res = await apiClient.get<ApiResponse<BloodBank[]>>('/blood/banks', { params });
+    return res.data.data;
+  },
+
+  getBloodBankById: async (id: number): Promise<BloodBank> => {
+    const res = await apiClient.get<ApiResponse<BloodBank>>(`/blood/banks/${id}`);
+    return res.data.data;
+  },
+
+  getBloodBankInventory: async (id: number): Promise<BloodInventoryItem[]> => {
+    const res = await apiClient.get<ApiResponse<BloodInventoryItem[]>>(`/blood/banks/${id}/inventory`);
+    return res.data.data;
+  },
+
+  getAllBloodInventory: async (): Promise<BloodInventoryItem[]> => {
+    const res = await apiClient.get<ApiResponse<BloodInventoryItem[]>>('/blood/inventory');
+    return res.data.data;
+  },
+
+  getEmergencyBloodRequests: async (): Promise<EmergencyBloodRequest[]> => {
+    const res = await apiClient.get<ApiResponse<EmergencyBloodRequest[]>>('/blood/requests');
+    return res.data.data;
+  },
+
+  getEmergencyBloodRequestById: async (id: number): Promise<EmergencyBloodRequest> => {
+    const res = await apiClient.get<ApiResponse<EmergencyBloodRequest>>(`/blood/requests/${id}`);
+    return res.data.data;
+  },
+
+  createEmergencyBloodRequest: async (input: CreateBloodRequestInput): Promise<EmergencyBloodRequest> => {
+    const res = await apiClient.post<ApiResponse<EmergencyBloodRequest>>('/blood/requests', input);
+    return res.data.data;
+  },
+
+  getBloodMatches: async (requestId: number): Promise<BloodMatchingResult> => {
+    const res = await apiClient.get<ApiResponse<BloodMatchingResult>>(`/blood/requests/${requestId}/matches`);
+    return res.data.data;
+  },
+
+  confirmBloodTransfer: async (input: ConfirmBloodTransferInput): Promise<BloodTransfer> => {
+    const res = await apiClient.post<ApiResponse<BloodTransfer>>('/blood/transfers/confirm', input);
+    return res.data.data;
+  },
+
+  updateBloodTransferStatus: async (transferId: number, status: string): Promise<BloodTransfer> => {
+    const res = await apiClient.patch<ApiResponse<BloodTransfer>>(`/blood/transfers/${transferId}/status`, null, {
+      params: { status },
+    });
+    return res.data.data;
+  },
+
+  getBloodTransfers: async (): Promise<BloodTransfer[]> => {
+    const res = await apiClient.get<ApiResponse<BloodTransfer[]>>('/blood/transfers');
+    return res.data.data;
+  },
+
+  getBloodDashboardSummary: async (): Promise<BloodDashboardSummary> => {
+    const res = await apiClient.get<ApiResponse<BloodDashboardSummary>>('/blood/dashboard/summary');
+    return res.data.data;
+  },
+
+  simulateBloodEmergency: async (input: BloodSimulationInput): Promise<BloodMatchingResult> => {
+    const res = await apiClient.post<ApiResponse<BloodMatchingResult>>('/blood/simulate', input);
     return res.data.data;
   },
 };
