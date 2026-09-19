@@ -31,8 +31,8 @@ export const DashboardPage: React.FC = () => {
     ])
       .then(([summaryData, phcsData, alertsData]) => {
         setSummary(summaryData);
-        setPhcs(phcsData);
-        setAlerts(alertsData);
+        setPhcs(Array.isArray(phcsData) ? phcsData : []);
+        setAlerts(Array.isArray(alertsData) ? alertsData : []);
       })
       .catch((err) => console.error('Failed to load dashboard data', err))
       .finally(() => setLoading(false));
@@ -44,7 +44,8 @@ export const DashboardPage: React.FC = () => {
 
   // Map of PHC ID -> Risk level
   const riskMap: Record<number, RiskLevel> = {};
-  alerts.forEach((alert) => {
+  (alerts || []).forEach((alert) => {
+    if (!alert) return;
     if (!riskMap[alert.phcId] || alert.riskLevel === 'CRITICAL') {
       riskMap[alert.phcId] = alert.riskLevel;
     }
@@ -146,7 +147,7 @@ export const DashboardPage: React.FC = () => {
           </div>
 
           <div className="overflow-y-auto space-y-2.5 flex-1 pr-1">
-            {summary?.districtSummaries.map((dist) => {
+            {summary?.districtSummaries?.map((dist) => {
               const isCrit = dist.criticalPhcs > 0;
               return (
                 <div
@@ -213,7 +214,7 @@ export const DashboardPage: React.FC = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-800">
-              {alerts.slice(0, 8).map((a, idx) => (
+              {(alerts || []).slice(0, 8).map((a, idx) => (
                 <tr key={idx} className="hover:bg-gray-800/40 transition">
                   <td className="p-3 font-medium text-white">{a.phcName}</td>
                   <td className="p-3 text-gray-400">{a.district}</td>

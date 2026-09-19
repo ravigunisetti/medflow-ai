@@ -24,8 +24,8 @@ export const TransfersPage: React.FC = () => {
     apiService
       .getTransfers(statusFilter || undefined, page, 20)
       .then((data) => {
-        setTransfers(data.content);
-        setTotalPages(data.totalPages);
+        setTransfers(Array.isArray(data?.content) ? data.content : []);
+        setTotalPages(data?.totalPages || 1);
       })
       .catch((err) => console.error(err))
       .finally(() => setLoading(false));
@@ -138,8 +138,8 @@ export const TransfersPage: React.FC = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-800">
-              {transfers.length > 0 ? (
-                transfers.map((t) => (
+              {(transfers || []).length > 0 ? (
+                (transfers || []).map((t) => (
                   <tr key={t.id} className="hover:bg-gray-800/40 transition">
                     <td className="p-3 font-mono text-gray-500">#{t.id}</td>
                     <td className="p-3">

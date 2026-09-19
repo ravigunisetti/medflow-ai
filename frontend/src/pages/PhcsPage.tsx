@@ -21,17 +21,19 @@ export const PhcsPage: React.FC = () => {
     apiService
       .getPhcs(filter, page, 20)
       .then((data) => {
-        setPhcs(data.content);
-        setTotalPages(data.totalPages);
+        setPhcs(Array.isArray(data?.content) ? data.content : []);
+        setTotalPages(data?.totalPages || 1);
       })
       .catch((err) => console.error(err))
       .finally(() => setLoading(false));
   }, [districtFilter, page]);
 
-  const filteredPhcs = phcs.filter(
+  const filteredPhcs = (phcs || []).filter(
     (p) =>
-      p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      p.district.toLowerCase().includes(searchQuery.toLowerCase())
+      p && (
+        p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        p.district.toLowerCase().includes(searchQuery.toLowerCase())
+      )
   );
 
   return (

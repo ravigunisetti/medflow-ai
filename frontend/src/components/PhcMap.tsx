@@ -46,7 +46,7 @@ export const PhcMap: React.FC<PhcMapProps> = ({
           url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
         />
 
-        {phcs.map((phc) => {
+        {(phcs || []).map((phc) => {
           // PHC 1-15 were seeded with critical/low stock, PHC 16-25 surplus, rest balanced
           const fallbackRisk: RiskLevel = phc.id <= 15 ? 'CRITICAL' : phc.id <= 25 ? 'LOW' : 'LOW';
           const risk = riskMap[phc.id] || fallbackRisk;

@@ -17,8 +17,8 @@ export const InventoryPage: React.FC = () => {
     apiService
       .getInventories(undefined, undefined, page, 25)
       .then((data) => {
-        setInventories(data.content);
-        setTotalPages(data.totalPages);
+        setInventories(Array.isArray(data?.content) ? data.content : []);
+        setTotalPages(data?.totalPages || 1);
       })
       .catch((err) => console.error(err))
       .finally(() => setLoading(false));
@@ -41,11 +41,13 @@ export const InventoryPage: React.FC = () => {
     }
   };
 
-  const filtered = inventories.filter(
+  const filtered = (inventories || []).filter(
     (i) =>
-      i.medicineName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      i.phcName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      i.category.toLowerCase().includes(searchQuery.toLowerCase())
+      i && (
+        i.medicineName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        i.phcName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        i.category.toLowerCase().includes(searchQuery.toLowerCase())
+      )
   );
 
   return (

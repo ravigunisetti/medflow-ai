@@ -49,7 +49,7 @@ export const AiAssistantPage: React.FC = () => {
       // Grounded reasoning pipeline: fetch live data from backend
       if (q.toLowerCase().includes('immediate') || q.toLowerCase().includes('critical')) {
         const alerts = await apiService.getActiveAlerts();
-        const topCriticals = alerts.filter((a) => a.riskLevel === 'CRITICAL').slice(0, 5);
+        const topCriticals = (alerts || []).filter((a) => a.riskLevel === 'CRITICAL').slice(0, 5);
 
         const reply: Message = {
           id: (Date.now() + 1).toString(),

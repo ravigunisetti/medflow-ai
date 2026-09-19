@@ -16,8 +16,8 @@ export const PredictionsPage: React.FC = () => {
     apiService
       .getPredictions(riskFilter || undefined, page, 25)
       .then((data) => {
-        setPredictions(data.content);
-        setTotalPages(data.totalPages);
+        setPredictions(Array.isArray(data?.content) ? data.content : []);
+        setTotalPages(data?.totalPages || 1);
       })
       .catch((err) => console.error(err))
       .finally(() => setLoading(false));
@@ -107,7 +107,7 @@ export const PredictionsPage: React.FC = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-800">
-              {predictions.map((p) => (
+              {(predictions || []).map((p) => (
                 <tr key={p.id} className="hover:bg-gray-800/40 transition">
                   <td className="p-3 font-medium text-white">{p.phcName}</td>
                   <td className="p-3 text-gray-400">{p.district}</td>
