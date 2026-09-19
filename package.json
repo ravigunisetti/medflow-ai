@@ -1,0 +1,12 @@
+{
+  "name": "medflow-ai",
+  "version": "1.0.0",
+  "private": true,
+  "description": "MedFlow AI - AI-Powered Healthcare Resource Orchestration Platform",
+  "scripts": {
+    "build": "cd frontend && npm install && npm run build",
+    "dev": "cd frontend && npm run dev",
+    "install:all": "cd frontend && npm install",
+    "postinstall": "cd frontend && npm install"
+  }
+}
