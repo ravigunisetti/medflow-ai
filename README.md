@@ -1,4 +1,4 @@
-# PHC-NET AI 🏥⚡
+# MEDFLOW AI 🏥⚡
 
 > **Scalable, Multilingual, AI-Powered Healthcare Resource & Medicine Supply-Chain Management Platform for India's Primary Health Centre (PHC) Network**
 
